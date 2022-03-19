@@ -1,17 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.IO;
+using System.Net.Mime;
+using System.Runtime.CompilerServices;
 
 namespace smradlavyProgram
 {
     internal class Program
     {
+       static Dictionary<string, string> nameSmell = new Dictionary<string, string>();
         static void Main(string[] args)
         {
             while (true)
             {
                 int num = getNumberOf();
-                foreach (var guy in getNames(num))
+                
+                foreach (var guy in getNames(num, nameSmell))
                 {
                     Console.WriteLine($"{guy.Key} \t {guy.Value}");
                 }
@@ -24,10 +28,10 @@ namespace smradlavyProgram
             int number = Convert.ToInt32(Console.ReadLine());
             return number;
         }
-        private static Dictionary<string, string> getNames(int num)
+        private static Dictionary<string, string> getNames(int num, Dictionary<string, string> nameSmell)
         {
             string smell;
-            Dictionary<string, string> nameSmell = new Dictionary<string, string>();
+           
 
             for (int i = 0; i < num; i++)
             {
@@ -49,10 +53,10 @@ namespace smradlavyProgram
             }
             avg = (double)sum / name.Length;
         
-        if(Math.Round(avg)%7==0) smrad = "a";
-        else if(Math.Round(avg)%5==0) smrad = "b";
-        else if(Math.Round(avg)%3==0) smrad = "c";
-        else smrad = "d";
+        if(Math.Round(avg)%7==0) smrad = "feet";
+        else if(Math.Round(avg)%5==0) smrad = "ass";
+        else if(Math.Round(avg)%3==0) smrad = "onion";
+        else smrad = "none";
         return smrad;
         }
     }
