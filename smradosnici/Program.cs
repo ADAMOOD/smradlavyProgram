@@ -8,7 +8,8 @@ namespace smradlavyProgram
 {
     internal class Program
     {
-       static Dictionary<string, string> nameSmell = new Dictionary<string, string>();
+       enum smells {none, onion, ass, feet}
+       static Dictionary<string, smells> nameSmell = new Dictionary<string, smells>();
         static void Main(string[] args)
         {
             while (true)
@@ -28,23 +29,21 @@ namespace smradlavyProgram
             int number = Convert.ToInt32(Console.ReadLine());
             return number;
         }
-        private static Dictionary<string, string> getNames(int num, Dictionary<string, string> nameSmell)
+        private static Dictionary<string, smells> getNames(int num, Dictionary<string, smells> nameSmell)
         {
-            string smell;
-           
-
+            smells smell;
             for (int i = 0; i < num; i++)
             {
                 Console.WriteLine($"zadej smraďocha číslo {i + 1}");
                 string name = Console.ReadLine();
                 smell=countSmell(name);
-                nameSmell.Add(name,smell );
+                nameSmell.Add(name,smell);
             }
             return nameSmell;
         }
-        private static string countSmell(string name)
+        private static smells countSmell(string name)
         {
-            string smrad = "";
+           
             double avg = 0;
             int sum = 0;
             for (int i = 0; i < name.Length; i++)
@@ -52,12 +51,16 @@ namespace smradlavyProgram
                 sum += (int)name[i];
             }
             avg = (double)sum / name.Length;
-        
-        if(Math.Round(avg)%7==0) smrad = "feet";
-        else if(Math.Round(avg)%5==0) smrad = "ass";
-        else if(Math.Round(avg)%3==0) smrad = "onion";
-        else smrad = "none";
-        return smrad;
+
+            if (Math.Round(avg) % 7 == 0)
+                return smells.feet;
+            else if (Math.Round(avg) % 5 == 0)
+                return smells.ass;
+            else if (Math.Round(avg) % 3 == 0)
+                return smells.onion;
+            else
+                return smells.none;
+       
         }
     }
 
