@@ -69,21 +69,23 @@ namespace smradlavyProgram
                 smell=countSmell(name);
                 nameSmell.Add(name,smell);
             }
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("VÝPIS SMRAĎOCHŮ:");
+            Console.ForegroundColor = ConsoleColor.Gray;
             return nameSmell;
         }
         private static smells countSmell(string name)
         {
             double avg = 0;
             int sum = 0;
+            
             for (int i = 0; i < name.Length; i++)
-            { 
-                
+            {     
                 if(name[i]==' ')
                 {
                     continue;
-                }
+                } 
                 sum += (int)name[i];
-
             }
             avg = (double)sum / name.Length;
             if (Math.Round(avg) % 7 == 0)
@@ -93,6 +95,7 @@ namespace smradlavyProgram
             if (Math.Round(avg) % 3 == 0)
                 return smells.onion;
                 return smells.none;
+            
         }
     }
 }
