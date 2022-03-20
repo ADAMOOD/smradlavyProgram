@@ -78,7 +78,10 @@ namespace smradlavyProgram
         {
             double avg = 0;
             int sum = 0;
-            
+            if (name==Levels.exit)
+            {
+                Environment.Exit(0);
+            }
             for (int i = 0; i < name.Length; i++)
             {     
                 if(name[i]==' ')
