@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace smradosnici
+﻿namespace smradosnici
 {
-    internal class Levels
+     static internal class Levels
     {
-
+        public const string onion = "smrdí jako cibuláč";
+        public const string ass = "smrdí jako koňská řiť";
+        public const string feet = "smrdí jako smradlavá noha bezdomovce";
+        public const string none = "nesmrdí ";
     }
 }
