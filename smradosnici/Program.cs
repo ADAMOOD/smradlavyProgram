@@ -10,6 +10,7 @@ namespace smradlavyProgram
     {
        enum smells {none, onion, ass, feet}
        static Dictionary<string, smells> nameSmell = new Dictionary<string, smells>();
+       static bool saved;
         static void Main(string[] args)
         {
             while (true)
@@ -48,6 +49,7 @@ namespace smradlavyProgram
 
                     }
                     Console.ForegroundColor = ConsoleColor.Gray;
+                    
                 }  
             }
         }
@@ -55,8 +57,20 @@ namespace smradlavyProgram
 
         private static int getNumberOf()
         {
+            
             Console.WriteLine("zadej kolik máš smraďochů na otestování");
-            int number = Convert.ToInt32(Console.ReadLine());
+            
+            string word =Console.ReadLine();
+            if (word == Levels.exit)
+            {
+                reallyExit();
+            }
+            if(word == Levels.save)
+            {
+               saved=saveFile(nameSmell);
+
+            }
+            int number = Convert.ToInt32(word);
             return number;
         }
         private static Dictionary<string, smells> getNames(int num, Dictionary<string, smells> nameSmell)
@@ -80,7 +94,11 @@ namespace smradlavyProgram
             int sum = 0;
             if (name==Levels.exit)
             {
-                Environment.Exit(0);
+                reallyExit();
+            }
+            if (name == Levels.save)
+            {
+                saved = saveFile(nameSmell);
             }
             for (int i = 0; i < name.Length; i++)
             {     
@@ -99,6 +117,24 @@ namespace smradlavyProgram
                 return smells.onion;
                 return smells.none;
             
+        }
+        private static void reallyExit()
+        {
+            Console.WriteLine("Opravdu chceš odejít zadej y/n");
+            string controll = Console.ReadLine();
+            if (controll == "y")
+            {
+                Environment.Exit(0);
+            }
+        }
+        private static bool saveFile(Dictionary<string, smells> nameSmell )
+        {
+                foreach (var player in nameSmell)
+                {
+                    File.AppendAllText("c:\\tmp\\smellyFile.txt", $"\n{player.Key}\t{player.Value}");
+                }
+                Console.WriteLine("ulozeno");
+            return true;
         }
     }
 }
