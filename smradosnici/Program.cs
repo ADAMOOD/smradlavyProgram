@@ -8,9 +8,9 @@ namespace smradlavyProgram
 {
     internal class Program
     {
-       enum smells {none, onion, ass, feet}
-       static Dictionary<string, smells> nameSmell = new Dictionary<string, smells>();
-       static bool saved;
+        enum smells { none, onion, ass, feet }
+        static Dictionary<string, smells> nameSmell = new Dictionary<string, smells>();
+        static bool saved;
         static void Main(string[] args)
         {
             while (true)
@@ -21,7 +21,7 @@ namespace smradlavyProgram
                     Console.Write($"{guy.Key} ");
                     switch (guy.Value)
                     {
-                       
+
                         case smells.none:
                             {
                                 Console.ForegroundColor = ConsoleColor.Green;
@@ -49,39 +49,54 @@ namespace smradlavyProgram
 
                     }
                     Console.ForegroundColor = ConsoleColor.Gray;
-                    
-                }  
+
+                }
             }
         }
-       
-
         private static int getNumberOf()
         {
-            
-            Console.WriteLine("zadej kolik máš smraďochů na otestování");
-            
-            string word =Console.ReadLine();
-            if (word == Levels.exit)
+            string word;
+            bool requestExit=true;
+            do
             {
-                reallyExit();
-            }
-            if(word == Levels.save)
-            {
-               saved=saveFile(nameSmell);
+                requestExit=true;
+                Console.WriteLine("zadej kolik máš smraďochů na otestování");
+                word = Console.ReadLine();
+                if (word == Levels.exit)
+                {
+                    requestExit = reallyExit(word);
+                }
+            } while (requestExit == false);
 
+            if (word == Levels.save)
+            {
+                saved = saveFile(nameSmell);
             }
             int number = Convert.ToInt32(word);
             return number;
         }
         private static Dictionary<string, smells> getNames(int num, Dictionary<string, smells> nameSmell)
         {
+            
             smells smell;
             for (int i = 0; i < num; i++)
             {
-                Console.WriteLine($"zadej smraďocha číslo {i + 1}");
-                string name = Console.ReadLine();
-                smell=countSmell(name);
-                nameSmell.Add(name,smell);
+                bool requestExit = true;
+                string name;
+                do
+                {
+                    requestExit=true;
+                    Console.WriteLine($"zadej smraďocha číslo {i + 1}");
+                     name = Console.ReadLine();
+                    if (name == Levels.exit)
+                    {
+                        requestExit=reallyExit(name);
+                    }
+                } while (requestExit==false);
+
+                smell = countSmell(name);
+
+                nameSmell.Add(name, smell);
             }
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("VÝPIS SMRAĎOCHŮ:");
@@ -92,20 +107,16 @@ namespace smradlavyProgram
         {
             double avg = 0;
             int sum = 0;
-            if (name==Levels.exit)
-            {
-                reallyExit();
-            }
             if (name == Levels.save)
             {
                 saved = saveFile(nameSmell);
             }
             for (int i = 0; i < name.Length; i++)
-            {     
-                if(name[i]==' ')
+            {
+                if (name[i] == ' ')
                 {
                     continue;
-                } 
+                }
                 sum += (int)name[i];
             }
             avg = (double)sum / name.Length;
@@ -115,25 +126,29 @@ namespace smradlavyProgram
                 return smells.ass;
             if (Math.Round(avg) % 3 == 0)
                 return smells.onion;
-                return smells.none;
-            
+            return smells.none;
+
         }
-        private static void reallyExit()
+        private static bool reallyExit(string text)
         {
-            Console.WriteLine("Opravdu chceš odejít zadej y/n");
-            string controll = Console.ReadLine();
-            if (controll == "y")
-            {
-                Environment.Exit(0);
-            }
-        }
-        private static bool saveFile(Dictionary<string, smells> nameSmell )
-        {
-                foreach (var player in nameSmell)
+           
+                Console.WriteLine("Opravdu chceš odejít zadej y/n");
+                string controll = Console.ReadLine();
+                if (controll == "y")
                 {
-                    File.AppendAllText("c:\\tmp\\smellyFile.txt", $"\n{player.Key}\t{player.Value}");
+                    Environment.Exit(0);
+                    return true;
                 }
-                Console.WriteLine("ulozeno");
+                return false;
+
+        }
+        private static bool saveFile(Dictionary<string, smells> nameSmell)
+        {
+            foreach (var player in nameSmell)
+            {
+                File.AppendAllText("c:\\tmp\\smellyFile.txt", $"\n{player.Key}\t{player.Value}");
+            }
+            Console.WriteLine("ulozeno");
             return true;
         }
     }
