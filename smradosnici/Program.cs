@@ -10,12 +10,16 @@ namespace smradlavyProgram
     {
         enum smells { none, onion, ass, feet }
         static Dictionary<string, smells> nameSmell = new Dictionary<string, smells>();
-        static bool saved;
+        const string path = "c:\\tmp\\smellyFile.txt";
+
+
         static void Main(string[] args)
         {
+            bool count=false;
             while (true)
             {
-                int num = getNumberOf();
+                
+                int num = getNumberOf(nameSmell,count);
                 foreach (var guy in getNames(num, nameSmell))
                 {
                     Console.Write($"{guy.Key} ");
@@ -51,33 +55,32 @@ namespace smradlavyProgram
                     Console.ForegroundColor = ConsoleColor.Gray;
 
                 }
+                count=true;
             }
         }
-        private static int getNumberOf()
+        private static int getNumberOf(Dictionary<string, smells> nameSmell,bool count)
         {
             string word;
-            bool requestExit=true;
+            bool requestExit;
             do
             {
                 requestExit=true;
-                Console.WriteLine("zadej kolik máš smraďochů na otestování");
+                Console.WriteLine("zadej kolik máš smraďochů na otestování anebo ulož soubor (save)");
                 word = Console.ReadLine();
                 if (word == Levels.exit)
                 {
                     requestExit = reallyExit(word);
                 }
+                if(word == Levels.save)
+                {
+                    count = requestExit = saveFile(nameSmell,count);
+                }
             } while (requestExit == false);
-
-            if (word == Levels.save)
-            {
-                saved = saveFile(nameSmell);
-            }
             int number = Convert.ToInt32(word);
             return number;
         }
         private static Dictionary<string, smells> getNames(int num, Dictionary<string, smells> nameSmell)
         {
-            
             smells smell;
             for (int i = 0; i < num; i++)
             {
@@ -99,18 +102,14 @@ namespace smradlavyProgram
                 nameSmell.Add(name, smell);
             }
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("VÝPIS SMRAĎOCHŮ:");
+            Console.WriteLine("VÝPIS SMRAĎOCHŮ:\n***************************************");
             Console.ForegroundColor = ConsoleColor.Gray;
             return nameSmell;
         }
         private static smells countSmell(string name)
         {
-            double avg = 0;
+            double avg ;
             int sum = 0;
-            if (name == Levels.save)
-            {
-                saved = saveFile(nameSmell);
-            }
             for (int i = 0; i < name.Length; i++)
             {
                 if (name[i] == ' ')
@@ -120,6 +119,7 @@ namespace smradlavyProgram
                 sum += (int)name[i];
             }
             avg = (double)sum / name.Length;
+            Math.Round(avg);
             if (Math.Round(avg) % 7 == 0)
                 return smells.feet;
             if (Math.Round(avg) % 5 == 0)
@@ -142,14 +142,21 @@ namespace smradlavyProgram
                 return false;
 
         }
-        private static bool saveFile(Dictionary<string, smells> nameSmell)
+        private static bool saveFile(Dictionary<string, smells> nameSmell,bool count)
         {
-            foreach (var player in nameSmell)
+            if(count)
             {
-                File.AppendAllText("c:\\tmp\\smellyFile.txt", $"\n{player.Key}\t{player.Value}");
+                File.Delete(path);
+                foreach (var player in nameSmell)
+                {
+                    File.AppendAllText(path, $"{player.Key};{player.Value}\n");
+                }
+                Console.WriteLine("ulozeno");
+                
+                return false;
             }
-            Console.WriteLine("ulozeno");
-            return true;
+            Console.WriteLine("Žádné změny se neukládají");
+            return false;
         }
     }
 }
