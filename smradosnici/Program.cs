@@ -16,9 +16,10 @@ namespace smradlavyProgram
         static void Main(string[] args)
         {
             bool count=false;
+            mabeLoadSavedFile(nameSmell);
             while (true)
             {
-                
+
                 int num = getNumberOf(nameSmell,count);
                 foreach (var guy in getNames(num, nameSmell))
                 {
@@ -58,6 +59,24 @@ namespace smradlavyProgram
                 count=true;
             }
         }
+        private static void mabeLoadSavedFile(Dictionary<string, smells> nameSmell)
+        {
+            if(File.Exists(path))
+            {
+                var file = File.ReadAllLines(path);
+                if (file.Length == 0)
+                {
+                    return;
+                }
+                foreach (var smell in file)
+                {
+                    string name = smell.Split(';')[0];
+                    smells vallue =(smells)Enum.Parse(typeof(smells),(smell.Split(';')[1]));
+                    nameSmell.Add(name, vallue);
+                }
+            }
+        }
+
         private static int getNumberOf(Dictionary<string, smells> nameSmell,bool count)
         {
             string word;
@@ -152,7 +171,6 @@ namespace smradlavyProgram
                     File.AppendAllText(path, $"{player.Key};{player.Value}\n");
                 }
                 Console.WriteLine("ulozeno");
-                
                 return false;
             }
             Console.WriteLine("Žádné změny se neukládají");
