@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Mime;
-using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using smradosnici;
 namespace smradlavyProgram
 {
@@ -15,49 +14,56 @@ namespace smradlavyProgram
 
         static void Main(string[] args)
         {
-            bool count=false;
+            bool count=true;
             mabeLoadSavedFile(nameSmell);
             while (true)
-            {
-                int num = getNumberOf(nameSmell,count);
-                foreach (var guy in getNames(num, nameSmell))
-                {
-                    Console.Write($"{guy.Key} ");
-                    switch (guy.Value)
-                    {
-
-                        case Smells.none:
-                            {
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine(Levels.none);
-                            }
-                            break;
-                        case Smells.onion:
-                            {
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.WriteLine(Levels.onion);
-                            }
-                            break;
-                        case Smells.ass:
-                            {
-                                Console.ForegroundColor = ConsoleColor.Cyan;
-                                Console.WriteLine(Levels.ass);
-                            }
-                            break;
-                        case Smells.feet:
-                            {
-                                Console.ForegroundColor = ConsoleColor.Red;
-                                Console.WriteLine(Levels.feet);
-                            }
-                            break;
-
-                    }
-                    Console.ForegroundColor = ConsoleColor.Gray;
-
-                }
-                count=true;
+            { 
+                int num = getNumberOf(nameSmell, count);
+                printTable(num);
+                count = true;
             }
         }
+
+        private static bool printTable(int num)
+        {
+            foreach (var guy in getNames(num, nameSmell))
+            {
+                Console.Write($"{guy.Key} ");
+                switch (guy.Value)
+                {
+
+                    case Smells.none:
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine(Levels.none);
+                        }
+                        break;
+                    case Smells.onion:
+                        {
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine(Levels.onion);
+                        }
+                        break;
+                    case Smells.ass:
+                        {
+                            Console.ForegroundColor = ConsoleColor.Cyan;
+                            Console.WriteLine(Levels.ass);
+                        }
+                        break;
+                    case Smells.feet:
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine(Levels.feet);
+                        }
+                        break;
+
+                }
+                Console.ResetColor();
+
+            }
+            return false;
+        }
+
         private static bool delete(Dictionary<string, Smells> nameSmell)
         {
             if (File.Exists(path))
@@ -79,7 +85,8 @@ namespace smradlavyProgram
         }
         private static bool manual()
         {
-                Console.WriteLine($"{Levels.exit} - Vypnutí programu\n{Levels.save} - Uloží soubor\n{Levels.delete} - vymaže uložený soubor\n");
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.WriteLine($"{Levels.exit} - Vypnutí programu\n{Levels.save} - Uloží soubor\n{Levels.delete} - vymaže uložený soubor\n{Levels.print} - vypíše tabulku smraďochů");
                 return false;
         }
         private static void mabeLoadSavedFile(Dictionary<string, Smells> nameSmell)
@@ -102,17 +109,26 @@ namespace smradlavyProgram
 
         private static int getNumberOf(Dictionary<string, Smells> nameSmell,bool count)
         {
+            int number=0;
             string word;
             bool request;
             do
             {
                 request=true;
+                Console.ResetColor();
                 Console.WriteLine("zadej kolik máš smraďochů na otestování anebo ulož soubor (můžeš použít manual)");
                 word = Console.ReadLine();
+                if(Regex.IsMatch(word, @"^\d+$"))
+                {
+                    number = Convert.ToInt32(word);
+                }
+                if (word.Equals(Levels.print, StringComparison.InvariantCultureIgnoreCase)&&(number!=0))
+                {
+                    request = printTable(number);
+                }
                 if (word.Equals(Levels.delete, StringComparison.InvariantCultureIgnoreCase))
                 {
                    request = delete(nameSmell);
-                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
                 if (word.Equals(Levels.manual, StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -125,10 +141,9 @@ namespace smradlavyProgram
                 if (word.Equals(Levels.save, StringComparison.InvariantCultureIgnoreCase))
                 {
                     count = request = saveFile(nameSmell, count);
-                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
             } while (request == false);
-            int number = Convert.ToInt32(word);
+            Console.ResetColor();
             return number;
         }
         private static Dictionary<string, Smells> getNames(int num, Dictionary<string, Smells> nameSmell)
@@ -153,7 +168,7 @@ namespace smradlavyProgram
             }
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("VÝPIS SMRAĎOCHŮ:\n***************************************");
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ResetColor();
             return nameSmell;
         }
         private static Smells countSmell(string name)
@@ -204,6 +219,7 @@ namespace smradlavyProgram
                 Console.WriteLine("ulozeno");
                 return false;
             }
+            Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Žádné změny se neukládají");
             return false;
         }

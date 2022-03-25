@@ -10,5 +10,6 @@
         public const string save = "save";
         public const string manual = "manual";
         public const string delete = "delete";
+        public const string print = "print";
     }
 }
