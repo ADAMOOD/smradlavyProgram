@@ -8,5 +8,7 @@
         public const string none = "nesmrdí ";
         public const string exit = "exit";
         public const string save = "save";
+        public const string manual = "manual";
+        public const string delete = "delete";
     }
 }

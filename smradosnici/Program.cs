@@ -8,8 +8,8 @@ namespace smradlavyProgram
 {
     internal class Program
     {
-        enum smells { none, onion, ass, feet }
-        static Dictionary<string, smells> nameSmell = new Dictionary<string, smells>();
+        enum Smells { none, onion, ass, feet }
+        static Dictionary<string, Smells> nameSmell = new Dictionary<string, Smells>();
         const string path = "c:\\tmp\\smellyFile.txt";
 
 
@@ -19,7 +19,6 @@ namespace smradlavyProgram
             mabeLoadSavedFile(nameSmell);
             while (true)
             {
-
                 int num = getNumberOf(nameSmell,count);
                 foreach (var guy in getNames(num, nameSmell))
                 {
@@ -27,25 +26,25 @@ namespace smradlavyProgram
                     switch (guy.Value)
                     {
 
-                        case smells.none:
+                        case Smells.none:
                             {
                                 Console.ForegroundColor = ConsoleColor.Green;
                                 Console.WriteLine(Levels.none);
                             }
                             break;
-                        case smells.onion:
+                        case Smells.onion:
                             {
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.WriteLine(Levels.onion);
                             }
                             break;
-                        case smells.ass:
+                        case Smells.ass:
                             {
                                 Console.ForegroundColor = ConsoleColor.Cyan;
                                 Console.WriteLine(Levels.ass);
                             }
                             break;
-                        case smells.feet:
+                        case Smells.feet:
                             {
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 Console.WriteLine(Levels.feet);
@@ -59,7 +58,31 @@ namespace smradlavyProgram
                 count=true;
             }
         }
-        private static void mabeLoadSavedFile(Dictionary<string, smells> nameSmell)
+        private static bool delete(Dictionary<string, Smells> nameSmell)
+        {
+            if (File.Exists(path))
+            {
+                Console.WriteLine("opravdu chceš soubor smazat? y/n");
+                string decide = Console.ReadLine();
+                Console.ForegroundColor = ConsoleColor.Red;
+                if (decide.Equals("y"))
+                {
+                    Console.WriteLine("Soubor smazán");
+                    File.Delete(path);
+                    nameSmell.Clear();
+                    return false;
+                }
+                return false;
+            }
+            Console.WriteLine("neexistuje soubor na smazání");
+            return false;
+        }
+        private static bool manual()
+        {
+                Console.WriteLine($"{Levels.exit} - Vypnutí programu\n{Levels.save} - Uloží soubor\n{Levels.delete} - vymaže uložený soubor\n");
+                return false;
+        }
+        private static void mabeLoadSavedFile(Dictionary<string, Smells> nameSmell)
         {
             if(File.Exists(path))
             {
@@ -71,36 +94,46 @@ namespace smradlavyProgram
                 foreach (var smell in file)
                 {
                     string name = smell.Split(';')[0];
-                    smells vallue =(smells)Enum.Parse(typeof(smells),(smell.Split(';')[1]));
+                    Smells vallue =(Smells)Enum.Parse(typeof(Smells),(smell.Split(';')[1]));
                     nameSmell.Add(name, vallue);
                 }
             }
         }
 
-        private static int getNumberOf(Dictionary<string, smells> nameSmell,bool count)
+        private static int getNumberOf(Dictionary<string, Smells> nameSmell,bool count)
         {
             string word;
-            bool requestExit;
+            bool request;
             do
             {
-                requestExit=true;
-                Console.WriteLine("zadej kolik máš smraďochů na otestování anebo ulož soubor (save)");
+                request=true;
+                Console.WriteLine("zadej kolik máš smraďochů na otestování anebo ulož soubor (můžeš použít manual)");
                 word = Console.ReadLine();
-                if (word == Levels.exit)
+                if (word.Equals(Levels.delete, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    requestExit = reallyExit(word);
+                   request = delete(nameSmell);
+                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
-                if(word == Levels.save)
+                if (word.Equals(Levels.manual, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    count = requestExit = saveFile(nameSmell,count);
+                    request = manual();
                 }
-            } while (requestExit == false);
+                if (word.Equals(Levels.exit, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    request = reallyExit(word);
+                }
+                if (word.Equals(Levels.save, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    count = request = saveFile(nameSmell, count);
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                }
+            } while (request == false);
             int number = Convert.ToInt32(word);
             return number;
         }
-        private static Dictionary<string, smells> getNames(int num, Dictionary<string, smells> nameSmell)
+        private static Dictionary<string, Smells> getNames(int num, Dictionary<string, Smells> nameSmell)
         {
-            smells smell;
+            Smells smell;
             for (int i = 0; i < num; i++)
             {
                 bool requestExit = true;
@@ -110,14 +143,12 @@ namespace smradlavyProgram
                     requestExit=true;
                     Console.WriteLine($"zadej smraďocha číslo {i + 1}");
                      name = Console.ReadLine();
-                    if (name == Levels.exit)
+                    if (name.Equals(Levels.exit, StringComparison.InvariantCultureIgnoreCase))
                     {
                         requestExit=reallyExit(name);
                     }
                 } while (requestExit==false);
-
                 smell = countSmell(name);
-
                 nameSmell.Add(name, smell);
             }
             Console.ForegroundColor = ConsoleColor.White;
@@ -125,7 +156,7 @@ namespace smradlavyProgram
             Console.ForegroundColor = ConsoleColor.Gray;
             return nameSmell;
         }
-        private static smells countSmell(string name)
+        private static Smells countSmell(string name)
         {
             double avg ;
             int sum = 0;
@@ -140,30 +171,30 @@ namespace smradlavyProgram
             avg = (double)sum / name.Length;
             Math.Round(avg);
             if (Math.Round(avg) % 7 == 0)
-                return smells.feet;
+                return Smells.feet;
             if (Math.Round(avg) % 5 == 0)
-                return smells.ass;
+                return Smells.ass;
             if (Math.Round(avg) % 3 == 0)
-                return smells.onion;
-            return smells.none;
+                return Smells.onion;
+            return Smells.none;
 
         }
         private static bool reallyExit(string text)
         {
-           
-                Console.WriteLine("Opravdu chceš odejít zadej y/n");
-                string controll = Console.ReadLine();
-                if (controll == "y")
+
+                Console.WriteLine("Opravdu chceš odejít zadej? y/n");
+                string decide = Console.ReadLine();
+                if (decide == "y")
                 {
                     Environment.Exit(0);
                     return true;
                 }
                 return false;
-
         }
-        private static bool saveFile(Dictionary<string, smells> nameSmell,bool count)
+        private static bool saveFile(Dictionary<string, Smells> nameSmell,bool count)
         {
-            if(count)
+            Console.ForegroundColor = ConsoleColor.Green;
+            if (count)
             {
                 File.Delete(path);
                 foreach (var player in nameSmell)
