@@ -1,4 +1,4 @@
-﻿namespace smradosnici
+﻿namespace smradlavyProgram
 {
      static internal class Levels
     {

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using smradosnici;
 namespace smradlavyProgram
 {
     internal class Program
@@ -10,8 +9,6 @@ namespace smradlavyProgram
         enum Smells { none, onion, ass, feet }
         static Dictionary<string, Smells> nameSmell = new Dictionary<string, Smells>();
         const string path = "c:\\tmp\\smellyFile.txt";
-
-
         static void Main(string[] args)
         {
             bool count=true;
@@ -23,7 +20,6 @@ namespace smradlavyProgram
                 count = true;
             }
         }
-
         private static bool printTable(int num)
         {
             foreach (var guy in getNames(num, nameSmell))
@@ -56,14 +52,12 @@ namespace smradlavyProgram
                             Console.WriteLine(Levels.feet);
                         }
                         break;
-
                 }
                 Console.ResetColor();
 
             }
             return false;
         }
-
         private static bool delete(Dictionary<string, Smells> nameSmell)
         {
             if (File.Exists(path))
@@ -106,7 +100,6 @@ namespace smradlavyProgram
                 }
             }
         }
-
         private static int getNumberOf(Dictionary<string, Smells> nameSmell,bool count)
         {
             int number=0;
@@ -167,7 +160,7 @@ namespace smradlavyProgram
                 nameSmell.Add(name, smell);
             }
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("VÝPIS SMRAĎOCHŮ:\n***************************************");
+            Console.WriteLine("VÝPIS SMRAĎOCHŮ:\n************************************************************");
             Console.ResetColor();
             return nameSmell;
         }
@@ -192,7 +185,6 @@ namespace smradlavyProgram
             if (Math.Round(avg) % 3 == 0)
                 return Smells.onion;
             return Smells.none;
-
         }
         private static bool reallyExit(string text)
         {
