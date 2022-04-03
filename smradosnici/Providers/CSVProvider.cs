@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -45,9 +46,13 @@ namespace smradlavyProgram
                     Program.Smells savedVallue = (Program.Smells)Enum.Parse(typeof(Program.Smells), parts[1].Trim('"'));
                     nameSmell.Add(savedName, savedVallue);
                 }
-            }
-            return;
+                }
         }
 
+        public static void delete(Dictionary<string, Program.Smells> nameSmell)
+        {
+            File.Delete(Constants.path);
+            nameSmell.Clear();
+        }
     }
 }

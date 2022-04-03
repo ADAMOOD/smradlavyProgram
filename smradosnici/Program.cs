@@ -64,7 +64,7 @@ namespace smradlavyProgram
             }
             return false;
         }
-        private static bool delete(Dictionary<string, Smells> nameSmell)
+        private static bool askingForDelete(Dictionary<string, Smells> nameSmell)
         {
             if (FileHelper.ensureFileExists())
             {
@@ -74,8 +74,7 @@ namespace smradlavyProgram
                 if (decide.Equals("y"))
                 {
                     Console.WriteLine("Soubor smazán");
-                    File.Delete(Constants.path);
-                    nameSmell.Clear();
+                    CSVProvider.delete(nameSmell);
                     return false;
                 }
                 return false;
@@ -111,7 +110,7 @@ namespace smradlavyProgram
                 }
                 if (word.Equals(Constants.delete, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    request = delete(nameSmell);
+                    request = askingForDelete(nameSmell);
                 }
                 if (word.Equals(Constants.manual, StringComparison.InvariantCultureIgnoreCase))
                 {
